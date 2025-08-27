@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Estimator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+	<img src="fulllogo.jpg" alt="Your Business Logo" class="logo">
+        <h1>Build Your Dream Yard</h1>
+        <p>Get a quick estimate for your next project.</p>
+    </header>
+
+    <main>
+        <section id="project-inputs">
+            <h2>1. Tell Us About Your Space</h2>
+            <p>Please enter the dimensions of the area in feet.</p>
+            <div class="input-group">
+                <label for="length">Length (in feet):</label>
+                <input type="number" id="length" placeholder="e.g., 50" required>
+            </div>
+            <div class="input-group">
+                <label for="width">Width (in feet):</label>
+                <input type="number" id="width" placeholder="e.g., 30" required>
+            </div>
+        </section>
+
+        <section id="project-options">
+            <h2>2. Choose Your Project</h2>
+            <div class="option-grid">
+                <div class="option-card" data-project="fence">
+                    <img src="fence.jpg" alt="Fence Project">
+                    <h3>Fence</h3>
+                    <p>Classic wood or modern vinyl fences for privacy and style.</p>
+                </div>
+                <div class="option-card" data-project="patio">
+                    <img src="patio.jpg.jpg" alt="Patio Project">
+                    <h3>Patio</h3>
+                    <p>Beautiful paver or concrete patios for outdoor living.</p>
+                </div>
+                <div class="option-card" data-project="deck">
+                    <img src="decks.jpg.jpg" alt="Deck Project">
+                    <h3>Deck</h3>
+                    <p>Custom-built decks to extend your living space.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="estimate-result">
+            <h2>3. Your Rough Estimate</h2>
+            <p>Select a project above to see your estimate.</p>
+            <div id="estimate-display">
+                <p>Length: <span id="display-length">0</span> ft</p>
+                <p>Width: <span id="display-width">0</span> ft</p>
+                <p>Project Type: <span id="display-project">Not Selected</span></p>
+                <h3 id="estimate-value">$0.00</h3>
+                <p class="disclaimer">This is a rough estimate and subject to change based on materials, labor, and specific project details. Contact us at (662) 812-9740 or go to https://theappearancepros.com for a precise quote.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Appearance Pro's Fencing & More. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
