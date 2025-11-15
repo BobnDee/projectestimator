@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Project Estimator — Appearance Pro's Fencing & More</title>
+  <style>
+    :root{--brand:#0056b3;--accent:#28a745;--card-border:#eee}
+    body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;color:#222;margin:0}
+    .container{max-width:960px;margin:24px auto;padding:0 18px}
+    header{text-align:center;padding:18px 0;border-bottom:2px solid #ddd}
+    header .logo{max-width:150px;height:auto;margin-bottom:8px;display:block;margin-left:auto;margin-right:auto}
+    header h1{color:var(--brand);margin:6px 0;font-size:1.6rem}
+    header p{margin:0;color:#444}
+    main{margin-top:18px}
+    section{background:#fff;padding:18px;border-radius:8px;margin-bottom:18px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+    h2{color:var(--brand);margin-top:0}
+    .input-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;font-weight:600;margin-bottom:6px}
+    input[type=number]{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box}
+    .option-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:8px}
+    .option-card{border:2px solid var(--card-border);border-radius:8px;overflow:hidden;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s}
+    .option-card:hover{transform:translateY(-6px);box-shadow:0 8px 18px rgba(0,0,0,.12)}
+    .option-card.selected{border-color:#007bff;box-shadow:0 0 14px rgba(0,123,255,.25)}
+    .option-card img{width:100%;height:160px;object-fit:cover;display:block}
+    .option-card h3{margin:10px 8px 6px}
+    .option-card p{font-size:.9rem;color:#555;padding:0 12px 12px;margin:0}
+    #estimate-display{text-align:center;background:#e9f5ff;border:1px solid #cce5ff;border-radius:8px;padding:18px;margin-top:12px}
+    #estimate-display h3{font-size:2rem;color:var(--accent);margin:8px 0}
+    .small{font-size:.9rem;color:#555}
+    footer{text-align:center;margin:18px 0;color:#666;font-size:.9rem}
+    @media (max-width:520px){.input-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container" role="document">
+    <header>
+      <!-- Use repo-provided logo image (fulllogo.jpg) located in My App folder -->
+      <img src="My%20App/fulllogo.jpg" alt="Appearance Pro's logo" class="logo">
+      <h1>Build Your Dream Yard</h1>
+      <p>Get a quick estimate for your next project.</p>
+    </header>
+
+    <main>
+      <section aria-labelledby="space-heading">
+        <h2 id="space-heading">1. Tell Us About Your Space</h2>
+        <p class="small">Enter the dimensions in feet (ft). Estimates are rough and intended for planning only.</p>
+        <div class="input-grid">
+          <div>
+            <label for="length">Length (ft)</label>
+            <input id="length" type="number" min="0" step="any" placeholder="e.g., 50">
+          </div>
+          <div>
+            <label for="width">Width (ft)</label>
+            <input id="width" type="number" min="0" step="any" placeholder="e.g., 30">
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="project-heading">
+        <h2 id="project-heading">2. Choose Your Project</h2>
+        <div class="option-grid" role="list">
+          <div class="option-card" data-project="fence" role="button" tabindex="0" aria-pressed="false">
+            <img src="My%20App/fence.jpg" alt="Fence project image">
+            <h3>Fence</h3>
+            <p>Privacy or decorative fencing. (Default estimate: $25 / sq ft)</p>
+          </div>
+
+          <div class="option-card" data-project="patio" role="button" tabindex="0" aria-pressed="false">
+            <img src="My%20App/patio.jpg.jpg" alt="Patio project image">
+            <h3>Patio</h3>
+            <p>Pavers or concrete patio. (Default estimate: $20 / sq ft)</p>
+          </div>
+
+          <div class="option-card" data-project="deck" role="button" tabindex="0" aria-pressed="false">
+            <img src="My%20App/decks.jpg.jpg" alt="Deck project image">
+            <h3>Deck</h3>
+            <p>Wood or composite deck. (Default estimate: $20 / sq ft)</p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="estimate-heading">
+        <h2 id="estimate-heading">3. Your Rough Estimate</h2>
+        <p class="small">Results update as you enter numbers and choose a project.</p>
+
+        <div id="estimate-display" aria-live="polite">
+          <p>Length: <strong><span id="display-length">0</span> ft</strong></p>
+          <p>Width: <strong><span id="display-width">0</span> ft</strong></p>
+          <p>Project Type: <strong><span id="display-project">Not Selected</span></strong></p>
+          <h3 id="estimate-value">$0.00</h3>
+          <p class="small">This is a rough estimate and may change based on site conditions, materials, labor, permits, and other specifics. For a formal quote call (662) 812-9740 or email <a href="mailto:info@appearancepros.com">info@appearancepros.com</a>.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2025 Appearance Pro's Fencing & More. All rights reserved.
+    </footer>
+  </div>
+
+  <script>
+    // Inline JavaScript for the estimator
+    (function(){
+      // Element references
+      const lengthInput = document.getElementById('length');
+      const widthInput = document.getElementById('width');
+      const projectCards = Array.from(document.querySelectorAll('.option-card'));
+      const displayLength = document.getElementById('display-length');
+      const displayWidth = document.getElementById('display-width');
+      const displayProject = document.getElementById('display-project');
+      const estimateValue = document.getElementById('estimate-value');
+
+      // Default cost-per-square-foot values — edit these numbers to match your pricing.
+      const costPerSqFt = { fence: 25, patio: 20, deck: 20 };
+      let selectedProject = null;
+
+      function setCardSelected(card, isSelected) {
+        if (isSelected) { card.classList.add('selected'); card.setAttribute('aria-pressed', 'true'); }
+        else { card.classList.remove('selected'); card.setAttribute('aria-pressed', 'false'); }
+      }
+
+      function updateEstimate() {
+        const length = parseFloat(lengthInput.value);
+        const width = parseFloat(widthInput.value);
+        if (isNaN(length) || isNaN(width) || length <= 0 || width <= 0) { displayLength.textContent = '0'; displayWidth.textContent = '0'; estimateValue.textContent = '$0.00'; return; }
+        const area = length * width;
+        displayLength.textContent = Number.isInteger(length) ? length : length.toFixed(2);
+        displayWidth.textContent = Number.isInteger(width) ? width : width.toFixed(2);
+        if (selectedProject && costPerSqFt[selectedProject] !== undefined) { const cost = costPerSqFt[selectedProject]; const totalEstimate = area * cost; estimateValue.textContent = `$${totalEstimate.toFixed(2)}`; }
+        else estimateValue.textContent = '$0.00';
+      }
+
+      lengthInput.addEventListener('input', updateEstimate);
+      widthInput.addEventListener('input', updateEstimate);
+
+      projectCards.forEach(card => {
+        function choose() { projectCards.forEach(c => setCardSelected(c, false)); setCardSelected(card, true); selectedProject = card.dataset.project; displayProject.textContent = selectedProject ? (selectedProject.charAt(0).toUpperCase() + selectedProject.slice(1)) : 'Not Selected'; updateEstimate(); }
+        card.addEventListener('click', choose);
+        card.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); } });
+      });
+
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') { projectCards.forEach(c => setCardSelected(c, false)); selectedProject = null; displayProject.textContent = 'Not Selected'; updateEstimate(); } });
+      updateEstimate();
+    })();
+  </script>
+</body>
+</html>
