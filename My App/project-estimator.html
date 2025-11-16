@@ -36,7 +36,7 @@
   <div class="container" role="document">
     <header>
       <!-- Use repo-provided logo image (fulllogo.jpg) -->
-      <img src="fulllogo.jpg" alt="Appearance Pro's logo" class="logo">
+      <img src="My%20App/fulllogo.jpg" alt="Appearance Pro's logo" class="logo">
       <h1>Build Your Dream Yard</h1>
       <p>Get a quick estimate for your next project.</p>
     </header>
@@ -61,19 +61,19 @@
         <h2 id="project-heading">2. Choose Your Project</h2>
         <div class="option-grid" role="list">
           <div class="option-card" data-project="fence" role="button" tabindex="0" aria-pressed="false">
-            <img src="fence.jpg" alt="Fence project image">
+            <img src="My%20App/fence.jpg" alt="Fence project image">
             <h3>Fence</h3>
             <p>Privacy or decorative fencing. (Default estimate: $25 / sq ft)</p>
           </div>
 
           <div class="option-card" data-project="patio" role="button" tabindex="0" aria-pressed="false">
-            <img src="patio.jpg.jpg" alt="Patio project image">
+            <img src="My%20App/patio.jpg.jpg" alt="Patio project image">
             <h3>Patio</h3>
             <p>Pavers or concrete patio. (Default estimate: $20 / sq ft)</p>
           </div>
 
           <div class="option-card" data-project="deck" role="button" tabindex="0" aria-pressed="false">
-            <img src="decks.jpg.jpg" alt="Deck project image">
+            <img src="My%20App/decks.jpg.jpg" alt="Deck project image">
             <h3>Deck</h3>
             <p>Wood or composite deck. (Default estimate: $20 / sq ft)</p>
           </div>
@@ -88,10 +88,8 @@
           <p>Length: <strong><span id="display-length">0</span> ft</strong></p>
           <p>Width: <strong><span id="display-width">0</span> ft</strong></p>
           <p>Project Type: <strong><span id="display-project">Not Selected</span></strong></p>
-          <h3 id="estimate-value">
-            $0.00
-          </h3>
-          <p class="small">This is a rough estimate and may change based on site conditions, materials, labor, permits, and other specifics. For a formal quote call (662) 812-9740 or email <a href="mailto:info@appearancepros.com">info@appearancepros.com</a>.</p>
+          <h3 id="estimate-value">$0.00</h3>
+          <p class="small">This is a rough estimate and may change based on site conditions, materials, labor, permits, and other specifics. For a formal quote call (662) 812-9740 or email <a href="#">contact</a>.</p>
         </div>
       </section>
     </main>
@@ -114,85 +112,35 @@
       const estimateValue = document.getElementById('estimate-value');
 
       // Default cost-per-square-foot values — edit these numbers to match your pricing.
-      const costPerSqFt = {
-        fence: 25,
-        patio: 20,
-        deck: 20
-      };
-
+      const costPerSqFt = { fence: 25, patio: 20, deck: 20 };
       let selectedProject = null;
 
       function setCardSelected(card, isSelected) {
-        if (isSelected) {
-          card.classList.add('selected');
-          card.setAttribute('aria-pressed', 'true');
-        } else {
-          card.classList.remove('selected');
-          card.setAttribute('aria-pressed', 'false');
-        }
+        if (isSelected) { card.classList.add('selected'); card.setAttribute('aria-pressed', 'true'); }
+        else { card.classList.remove('selected'); card.setAttribute('aria-pressed', 'false'); }
       }
 
       function updateEstimate() {
         const length = parseFloat(lengthInput.value);
         const width = parseFloat(widthInput.value);
-
-        if (isNaN(length) || isNaN(width) || length <= 0 || width <= 0) {
-          displayLength.textContent = '0';
-          displayWidth.textContent = '0';
-          estimateValue.textContent = '$0.00';
-          return;
-        }
-
+        if (isNaN(length) || isNaN(width) || length <= 0 || width <= 0) { displayLength.textContent = '0'; displayWidth.textContent = '0'; estimateValue.textContent = '$0.00'; return; }
         const area = length * width;
-
         displayLength.textContent = Number.isInteger(length) ? length : length.toFixed(2);
         displayWidth.textContent = Number.isInteger(width) ? width : width.toFixed(2);
-
-        if (selectedProject && costPerSqFt[selectedProject] !== undefined) {
-          const cost = costPerSqFt[selectedProject];
-          const totalEstimate = area * cost;
-          estimateValue.textContent = `$${totalEstimate.toFixed(2)}`;
-        } else {
-          estimateValue.textContent = '$0.00';
-        }
+        if (selectedProject && costPerSqFt[selectedProject] !== undefined) { const cost = costPerSqFt[selectedProject]; const totalEstimate = area * cost; estimateValue.textContent = `$${totalEstimate.toFixed(2)}`; }
+        else estimateValue.textContent = '$0.00';
       }
 
-      // Input listeners to update estimate live
       lengthInput.addEventListener('input', updateEstimate);
       widthInput.addEventListener('input', updateEstimate);
 
-      // Click and keyboard handlers for project cards
       projectCards.forEach(card => {
-        function choose() {
-          // Deselect other cards
-          projectCards.forEach(c => setCardSelected(c, false));
-          // Select this one
-          setCardSelected(card, true);
-          selectedProject = card.dataset.project;
-          displayProject.textContent = selectedProject ? (selectedProject.charAt(0).toUpperCase() + selectedProject.slice(1)) : 'Not Selected';
-          updateEstimate();
-        }
-
+        function choose() { projectCards.forEach(c => setCardSelected(c, false)); setCardSelected(card, true); selectedProject = card.dataset.project; displayProject.textContent = selectedProject ? (selectedProject.charAt(0).toUpperCase() + selectedProject.slice(1)) : 'Not Selected'; updateEstimate(); }
         card.addEventListener('click', choose);
-        card.addEventListener('keydown', function(e){
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            choose();
-          }
-        });
+        card.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); } });
       });
 
-      // Accessibility: allow clearing selection with Escape
-      document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape') {
-          projectCards.forEach(c => setCardSelected(c, false));
-          selectedProject = null;
-          displayProject.textContent = 'Not Selected';
-          updateEstimate();
-        }
-      });
-
-      // Initialize display
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') { projectCards.forEach(c => setCardSelected(c, false)); selectedProject = null; displayProject.textContent = 'Not Selected'; updateEstimate(); } });
       updateEstimate();
     })();
   </script>
