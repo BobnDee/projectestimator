@@ -14,10 +14,18 @@
     header p{margin:0;color:#444}
     main{margin-top:18px}
     section{background:#fff;padding:18px;border-radius:8px;margin-bottom:18px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+    section.disabled{opacity:0.5;pointer-events:none}
     h2{color:var(--brand);margin-top:0}
     .input-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     label{display:block;font-weight:600;margin-bottom:6px}
-    input[type=number]{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box}
+    input[type=text],input[type=email],input[type=tel],input[type=number]{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box}
+    .honeypot{position:absolute;left:-9999px;opacity:0;pointer-events:none}
+    .consent-wrapper{margin-top:12px}
+    .consent-wrapper label{display:flex;align-items:center;font-weight:400}
+    .consent-wrapper input[type=checkbox]{width:auto;margin-right:8px}
+    button{background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:6px;font-size:1rem;font-weight:600;cursor:pointer;transition:background .2s}
+    button:hover{background:#1e7e34}
+    button:disabled{background:#ccc;cursor:not-allowed}
     .option-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:8px}
     .option-card{border:2px solid var(--card-border);border-radius:8px;overflow:hidden;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s}
     .option-card:hover{transform:translateY(-6px);box-shadow:0 8px 18px rgba(0,0,0,.12)}
@@ -42,55 +50,108 @@
     </header>
 
     <main>
-      <section aria-labelledby="space-heading">
-        <h2 id="space-heading">1. Tell Us About Your Space</h2>
-        <p class="small">Enter the dimensions in feet (ft). Estimates are rough and intended for planning only.</p>
-        <div class="input-grid">
-          <div>
-            <label for="length">Length (ft)</label>
-            <input id="length" type="number" min="0" step="any" placeholder="e.g., 50">
+      <section aria-labelledby="contact-heading">
+        <h2 id="contact-heading">1. Contact Information</h2>
+        <p class="small">We'll use this to provide a detailed quote. Your information is private and secure.</p>
+        <form id="contact-form">
+          <div class="input-grid">
+            <div>
+              <label for="first-name">First Name <span style="color:red;">*</span></label>
+              <input id="first-name" name="firstName" type="text" required placeholder="John">
+            </div>
+            <div>
+              <label for="last-name">Last Name <span style="color:red;">*</span></label>
+              <input id="last-name" name="lastName" type="text" required placeholder="Doe">
+            </div>
           </div>
-          <div>
-            <label for="width">Width (ft)</label>
-            <input id="width" type="number" min="0" step="any" placeholder="e.g., 30">
+          <div class="input-grid" style="margin-top:12px">
+            <div>
+              <label for="email">Email <span style="color:red;">*</span></label>
+              <input id="email" name="email" type="email" required placeholder="john@example.com">
+            </div>
+            <div>
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" placeholder="(123) 456-7890">
+            </div>
           </div>
-        </div>
+          <div style="margin-top:12px">
+            <label for="address">Address</label>
+            <input id="address" name="address" type="text" placeholder="123 Main St, City, State">
+          </div>
+          <div class="honeypot">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="consent-wrapper">
+            <label>
+              <input id="consent" name="consent" type="checkbox" required>
+              I agree to the <a href="/privacy" target="_blank">Privacy Policy</a> and consent to be contacted about my project. <span style="color:red;">*</span>
+            </label>
+          </div>
+          <button type="submit" style="margin-top:12px">Save Contact Info</button>
+        </form>
       </section>
 
-      <section aria-labelledby="project-heading">
+      <section aria-labelledby="project-heading" class="disabled" id="project-section">
         <h2 id="project-heading">2. Choose Your Project</h2>
         <div class="option-grid" role="list">
           <div class="option-card" data-project="fence" role="button" tabindex="0" aria-pressed="false">
             <img src="fence.jpg" alt="Fence project image">
             <h3>Fence</h3>
-            <p>Privacy or decorative fencing. (Default estimate: $25 / sq ft)</p>
+            <p>Privacy or decorative fencing. (Estimate: $25 / linear ft)</p>
           </div>
 
           <div class="option-card" data-project="patio" role="button" tabindex="0" aria-pressed="false">
             <img src="patio.jpg.jpg" alt="Patio project image">
             <h3>Patio</h3>
-            <p>Pavers or concrete patio. (Default estimate: $20 / sq ft)</p>
+            <p>Pavers or concrete patio. (Estimate: $20 / sq ft)</p>
           </div>
 
           <div class="option-card" data-project="deck" role="button" tabindex="0" aria-pressed="false">
             <img src="decks.jpg.jpg" alt="Deck project image">
             <h3>Deck</h3>
-            <p>Wood or composite deck. (Default estimate: $20 / sq ft)</p>
+            <p>Wood or composite deck. (Estimate: $20 / sq ft)</p>
           </div>
         </div>
       </section>
 
-      <section aria-labelledby="estimate-heading">
-        <h2 id="estimate-heading">3. Your Rough Estimate</h2>
+      <section aria-labelledby="space-heading" class="disabled" id="dimensions-section">
+        <h2 id="space-heading">3. Tell Us About Your Space</h2>
+        <p class="small">Enter the dimensions in feet (ft). Estimates are rough and intended for planning only.</p>
+        <div id="fence-input" style="display:none">
+          <div>
+            <label for="total-feet">Total Linear Feet <span style="color:red;">*</span></label>
+            <input id="total-feet" type="number" min="0" step="any" placeholder="e.g., 150">
+          </div>
+        </div>
+        <div id="area-input" style="display:none">
+          <div class="input-grid">
+            <div>
+              <label for="length">Length (ft) <span style="color:red;">*</span></label>
+              <input id="length" type="number" min="0" step="any" placeholder="e.g., 50">
+            </div>
+            <div>
+              <label for="width">Width (ft) <span style="color:red;">*</span></label>
+              <input id="width" type="number" min="0" step="any" placeholder="e.g., 30">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="estimate-heading" class="disabled" id="estimate-section">
+        <h2 id="estimate-heading">4. Your Rough Estimate</h2>
         <p class="small">Results update as you enter numbers and choose a project.</p>
 
         <div id="estimate-display" aria-live="polite">
-          <p>Length: <strong><span id="display-length">0</span> ft</strong></p>
-          <p>Width: <strong><span id="display-width">0</span> ft</strong></p>
+          <div id="fence-display" style="display:none">
+            <p>Total Linear Feet: <strong><span id="display-total-feet">0</span> ft</strong></p>
+          </div>
+          <div id="area-display" style="display:none">
+            <p>Length: <strong><span id="display-length">0</span> ft</strong></p>
+            <p>Width: <strong><span id="display-width">0</span> ft</strong></p>
+          </div>
           <p>Project Type: <strong><span id="display-project">Not Selected</span></strong></p>
-          <h3 id="estimate-value">
-            $0.00
-          </h3>
+          <h3 id="estimate-value">$0.00</h3>
           <p class="small">This is a rough estimate and may change based on site conditions, materials, labor, permits, and other specifics. For a formal quote call (662) 812-9740 or email <a href="mailto:info@appearancepros.com">info@appearancepros.com</a>.</p>
         </div>
       </section>
@@ -103,24 +164,113 @@
 
   <script>
     // Inline JavaScript for the estimator
+    // IMPORTANT: GA4 POLICY - DO NOT SEND PII (name, email, phone, address) TO GOOGLE ANALYTICS
     (function(){
-      // Element references
+      // Configuration: Set your webhook URL here (must be HTTPS)
+      const LEAD_WEBHOOK_URL = 'https://example.com/api/leads'; // REPLACE WITH YOUR ACTUAL WEBHOOK URL
+
+      // Element references - Contact form
+      const contactForm = document.getElementById('contact-form');
+      const projectSection = document.getElementById('project-section');
+      const dimensionsSection = document.getElementById('dimensions-section');
+      const estimateSection = document.getElementById('estimate-section');
+
+      // Element references - Dimensions
+      const fenceInput = document.getElementById('fence-input');
+      const areaInput = document.getElementById('area-input');
+      const totalFeetInput = document.getElementById('total-feet');
       const lengthInput = document.getElementById('length');
       const widthInput = document.getElementById('width');
+
+      // Element references - Project cards
       const projectCards = Array.from(document.querySelectorAll('.option-card'));
+
+      // Element references - Display
+      const fenceDisplay = document.getElementById('fence-display');
+      const areaDisplay = document.getElementById('area-display');
+      const displayTotalFeet = document.getElementById('display-total-feet');
       const displayLength = document.getElementById('display-length');
       const displayWidth = document.getElementById('display-width');
       const displayProject = document.getElementById('display-project');
       const estimateValue = document.getElementById('estimate-value');
 
-      // Default cost-per-square-foot values — edit these numbers to match your pricing.
-      const costPerSqFt = {
-        fence: 25,
-        patio: 20,
-        deck: 20
-      };
-
+      // Pricing (per linear foot for fence, per sq ft for deck/patio)
+      const costPerUnit = { fence: 25, patio: 20, deck: 20 };
       let selectedProject = null;
+      let consentGiven = false;
+
+      // Helper: Get GA client_id (may be null if gtag not loaded)
+      function getGAClientId(callback) {
+        if (typeof gtag === 'function') {
+          gtag('get', 'G-XXXXXXXXXX', 'client_id', callback);
+        } else {
+          callback(null);
+        }
+      }
+
+      // Helper: Send event to GA4 only if consent given (NO PII)
+      function sendAnalyticsEvent(eventName, params) {
+        if (!consentGiven) return;
+        if (typeof gtag === 'function') {
+          // GA4 POLICY: Only send non-PII parameters
+          gtag('event', eventName, params);
+        }
+      }
+
+      // Contact form save handler
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Check honeypot (anti-spam)
+        const honeypot = document.getElementById('website').value;
+        if (honeypot) {
+          console.warn('Spam detected');
+          return;
+        }
+
+        // Gather contact data
+        const contactData = {
+          firstName: document.getElementById('first-name').value,
+          lastName: document.getElementById('last-name').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          address: document.getElementById('address').value,
+          consent: document.getElementById('consent').checked,
+          timestamp: new Date().toISOString()
+        };
+
+        // Store locally
+        localStorage.setItem('contactInfo', JSON.stringify(contactData));
+        consentGiven = contactData.consent;
+
+        // Get GA client_id and POST to webhook
+        getGAClientId(function(clientId) {
+          const payload = {
+            ...contactData,
+            ga_client_id: clientId
+          };
+
+          // POST to webhook (HTTPS required)
+          fetch(LEAD_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          }).catch(err => console.error('Webhook error:', err));
+        });
+
+        // Send GA event (NO PII)
+        sendAnalyticsEvent('lead_form_saved', {
+          event_category: 'engagement',
+          event_label: 'contact_saved'
+        });
+
+        // Enable project selection
+        projectSection.classList.remove('disabled');
+        dimensionsSection.classList.remove('disabled');
+        estimateSection.classList.remove('disabled');
+
+        alert('Contact info saved! You can now select a project.');
+      });
 
       function setCardSelected(card, isSelected) {
         if (isSelected) {
@@ -133,43 +283,86 @@
       }
 
       function updateEstimate() {
-        const length = parseFloat(lengthInput.value);
-        const width = parseFloat(widthInput.value);
+        let estimate = 0;
+        let displayText = '';
 
-        if (isNaN(length) || isNaN(width) || length <= 0 || width <= 0) {
-          displayLength.textContent = '0';
-          displayWidth.textContent = '0';
-          estimateValue.textContent = '$0.00';
-          return;
+        if (selectedProject === 'fence') {
+          const totalFeet = parseFloat(totalFeetInput.value);
+          if (!isNaN(totalFeet) && totalFeet > 0) {
+            estimate = totalFeet * costPerUnit.fence;
+            displayTotalFeet.textContent = Number.isInteger(totalFeet) ? totalFeet : totalFeet.toFixed(2);
+          } else {
+            displayTotalFeet.textContent = '0';
+          }
+        } else if (selectedProject === 'patio' || selectedProject === 'deck') {
+          const length = parseFloat(lengthInput.value);
+          const width = parseFloat(widthInput.value);
+          if (!isNaN(length) && !isNaN(width) && length > 0 && width > 0) {
+            const area = length * width;
+            estimate = area * costPerUnit[selectedProject];
+            displayLength.textContent = Number.isInteger(length) ? length : length.toFixed(2);
+            displayWidth.textContent = Number.isInteger(width) ? width : width.toFixed(2);
+          } else {
+            displayLength.textContent = '0';
+            displayWidth.textContent = '0';
+          }
         }
 
-        const area = length * width;
+        estimateValue.textContent = estimate > 0 ? `$${estimate.toFixed(2)}` : '$0.00';
 
-        displayLength.textContent = Number.isInteger(length) ? length : length.toFixed(2);
-        displayWidth.textContent = Number.isInteger(width) ? width : width.toFixed(2);
-
-        if (selectedProject && costPerSqFt[selectedProject] !== undefined) {
-          const cost = costPerSqFt[selectedProject];
-          const totalEstimate = area * cost;
-          estimateValue.textContent = `$${totalEstimate.toFixed(2)}`;
-        } else {
-          estimateValue.textContent = '$0.00';
+        // Send GA event when estimate calculated (NO PII)
+        if (estimate > 0 && consentGiven) {
+          sendAnalyticsEvent('estimate_calculated', {
+            project: selectedProject,
+            value: estimate,
+            currency: 'USD',
+            units: selectedProject === 'fence' ? 'linear_feet' : 'square_feet'
+          });
         }
       }
 
-      // Input listeners to update estimate live
-      lengthInput.addEventListener('input', updateEstimate);
-      widthInput.addEventListener('input', updateEstimate);
+      // Input listeners
+      if (totalFeetInput) totalFeetInput.addEventListener('input', updateEstimate);
+      if (lengthInput) lengthInput.addEventListener('input', updateEstimate);
+      if (widthInput) widthInput.addEventListener('input', updateEstimate);
 
-      // Click and keyboard handlers for project cards
+      // Project card selection
       projectCards.forEach(card => {
         function choose() {
-          // Deselect other cards
+          // Deselect all
           projectCards.forEach(c => setCardSelected(c, false));
-          // Select this one
           setCardSelected(card, true);
+          
+          const previousProject = selectedProject;
           selectedProject = card.dataset.project;
           displayProject.textContent = selectedProject ? (selectedProject.charAt(0).toUpperCase() + selectedProject.slice(1)) : 'Not Selected';
+
+          // Clear inputs when switching project types
+          if (previousProject !== selectedProject) {
+            if (totalFeetInput) totalFeetInput.value = '';
+            if (lengthInput) lengthInput.value = '';
+            if (widthInput) widthInput.value = '';
+          }
+
+          // Show/hide appropriate input fields
+          if (selectedProject === 'fence') {
+            fenceInput.style.display = 'block';
+            areaInput.style.display = 'none';
+            fenceDisplay.style.display = 'block';
+            areaDisplay.style.display = 'none';
+          } else {
+            fenceInput.style.display = 'none';
+            areaInput.style.display = 'block';
+            fenceDisplay.style.display = 'none';
+            areaDisplay.style.display = 'block';
+          }
+
+          // Send GA event (NO PII)
+          sendAnalyticsEvent('project_selected', {
+            project: selectedProject,
+            event_category: 'engagement'
+          });
+
           updateEstimate();
         }
 
@@ -182,17 +375,20 @@
         });
       });
 
-      // Accessibility: allow clearing selection with Escape
+      // Escape key to deselect
       document.addEventListener('keydown', function(e){
         if (e.key === 'Escape') {
           projectCards.forEach(c => setCardSelected(c, false));
           selectedProject = null;
           displayProject.textContent = 'Not Selected';
+          fenceInput.style.display = 'none';
+          areaInput.style.display = 'none';
+          fenceDisplay.style.display = 'none';
+          areaDisplay.style.display = 'none';
           updateEstimate();
         }
       });
 
-      // Initialize display
       updateEstimate();
     })();
   </script>
